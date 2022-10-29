@@ -1,6 +1,7 @@
 import { Ref, ref } from 'vue'
 import { SearchValue } from '../values'
-import { BaseRepository, ISearchQuery, IqQuery } from '../repositories'
+import { ISearchQuery, IqQuery } from '../interfaces'
+import { BaseRepository } from '../repositories'
 import { toaster, loader } from '../libs'
 
 interface IArgs {
@@ -12,6 +13,8 @@ interface IOptions {
   limit?: number
   defaultSearches?: IqQuery
   forceSearches?: IqQuery
+  listTopTargetId?: string
+  headerHeight?: number
 }
 export class ListItemClass<T> {
   public page: Ref<number>
@@ -52,7 +55,9 @@ export class ListItemClass<T> {
   protected _defaultOptions (): IOptions {
     return {
       limit: 100,
-      defaultSearches: {}
+      defaultSearches: {},
+      listTopTargetId: '#list-top',
+      headerHeight: 70
     }
   }
 
@@ -99,9 +104,20 @@ export class ListItemClass<T> {
     return { data, headers }
   }
 
+  protected toScrollTop () {
+    const targetId = this.options.listTopTargetId
+    const headerHeight = this.options.headerHeight
+    const targetElement = document.querySelector(targetId)
+    const scrollTarget = document.scrollingElement || document.documentElement
+    const toTop = targetElement ? window.pageYOffset + targetElement.getBoundingClientRect().top : 0
+    // MEMO: 固定ヘッダーの高さ分だけ調整をいれる
+    scrollTarget.scrollTop = toTop - headerHeight
+  }
+
   async selectPage (toPage = 1) {
     this.page.value = toPage
     await this.fetchItems()
+    this.toScrollTop()
   }
 
   async searchClear () {
