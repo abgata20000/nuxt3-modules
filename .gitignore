@@ -1,0 +1,16 @@
+#IntelliJ IDEA
+.idea
+*.iml
+*.pem
+.npm
+.config
+node_modules
+*.log
+.output
+.env
+.vscode
+.ash_history
+.envrc
+.aws
+.serverlessrc
+.tmp/*
