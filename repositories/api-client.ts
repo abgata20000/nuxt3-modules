@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios'
 import { serialize } from 'object-to-formdata'
 import { camelcaseKeys, snakecaseKeys } from '../libs'
-import { AccessTokenValue } from '../values'
+import { accessTokenValue, accessTokenExpiredAtValue } from '../values'
+import { TokenModel } from '../models'
 export class ApiClient {
-  static generateClient (apiBaseUrl: string) {
-    const accessTokenValue = new AccessTokenValue()
+  static generateClient (apiBaseUrl: string, useAuth: boolean) {
     const client: AxiosInstance = axios.create({
       baseURL: apiBaseUrl,
       headers: {
@@ -13,7 +13,7 @@ export class ApiClient {
     })
 
     // MEMO: リクエストを送る際に、送信するデータのキーをスネークケースに変換しておく
-    client.interceptors.request.use((config) => {
+    client.interceptors.request.use(async (config) => {
       if (config.data && typeof config.data === 'object') {
         // TODO: Fileが含まれているかどうかを判定しているが1階層目しか判定対象にしていないので、深い階層にも対応する必要がある
         const fileKeys = []
@@ -35,8 +35,15 @@ export class ApiClient {
       if (config.params && typeof config.params === 'object') {
         config.params = snakecaseKeys(config.params, { deep: true })
       }
-      // MEMO: 送信時に都度トークンをセットする
-      config.headers.Authorization = `Bearer ${accessTokenValue.value}`
+      if (useAuth) {
+        const token = TokenModel.factory()
+        // MEMO: アクセストークンの有効期限が切れていたら更新する
+        if (token.isExpired) {
+          await token.refresh()
+        }
+        // MEMO: 送信時に都度トークンをセットする
+        config.headers.Authorization = `Bearer ${token.accessToken}`
+      }
       return config
     })
 

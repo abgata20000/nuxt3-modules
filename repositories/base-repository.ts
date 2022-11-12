@@ -1,12 +1,12 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
-import { ApiClient } from './api-client'
 import { IPostParams, ISearchQuery } from '../interfaces'
+import { ApiClient } from './api-client'
 const API_BASE_URL = String(import.meta.env.VITE_API_BASE_URL)
 
 export class BaseRepository {
   client: AxiosInstance
   constructor () {
-    this.client = ApiClient.generateClient(API_BASE_URL)
+    this.client = ApiClient.generateClient(API_BASE_URL, this.useAuth())
   }
 
   index (params: ISearchQuery = {}): Promise<AxiosResponse> {
@@ -82,5 +82,9 @@ export class BaseRepository {
 
   protected resourcePath (id: string | number): string {
     throw new Error('継承先で定義すること')
+  }
+
+  protected useAuth () {
+    return true
   }
 }
