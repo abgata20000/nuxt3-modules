@@ -1,4 +1,4 @@
-import { ISearchQuery } from './abstracut-search-value'
+import { ISearchQuery } from '../interfaces'
 export class SearchValue {
   key: string
   constructor (key: string) {
