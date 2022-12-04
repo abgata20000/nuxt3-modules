@@ -7,5 +7,5 @@ export interface ISearchQuery {
     [key: string]: IqQuery | string | number | boolean | Array<string | number | boolean> | null
 }
 export interface IPostParams {
-    [key: string]: IqQuery | string | number | boolean | Array<string | number | boolean> | null
+    [key: string]: IqQuery | string | number | boolean | Array<string | number | boolean | any> | null
 }
