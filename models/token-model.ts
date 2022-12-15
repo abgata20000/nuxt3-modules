@@ -1,20 +1,19 @@
 import dayjs from 'dayjs'
 import { refreshTokenValue, accessTokenValue, refreshTokenExpiredAtValue, accessTokenExpiredAtValue } from '../values'
 import { TokenRepository } from '../repositories'
-import { BaseModel, FieldDecorator as Field, ModelDecorator as Model } from './'
-
+import { BaseModel, useFieldDecorator } from './'
+const { Field, fieldProperties } = useFieldDecorator()
 export interface ITokenModel {
   id?: number
   userAccountId?: number
-  refreshToken: string
+  refreshToken?: string
   refreshTokenExpiredAt?: string
-  accessToken: string
+  accessToken?: string
   accessTokenExpiredAt?: string
   createdAt?: string
   updatedAt?: string
 }
 
-@Model()
 export class TokenModel extends BaseModel implements ITokenModel {
   protected data: ITokenModel
   @Field() id: number
@@ -28,7 +27,7 @@ export class TokenModel extends BaseModel implements ITokenModel {
 
   constructor (data: ITokenModel) {
     super()
-    this.assignDefaultAttributes(data)
+    this.assignDefaultAttributes(data, fieldProperties)
   }
 
   static factory () {
