@@ -18,9 +18,21 @@ export function FieldDecorator (defaultValue?: any) {
       }
     })
     if (defaultValue !== undefined) {
-      (target.defaultValues || (target.defaultValues = {}) as any)[propertyKey] = defaultValue
+      (target.fieldProperties || (target.fieldProperties = {}) as any)[propertyKey] = defaultValue
     } else {
-      (target.defaultValues || (target.defaultValues = {}) as any)[propertyKey] = null
+      (target.fieldProperties || (target.fieldProperties = {}) as any)[propertyKey] = null
     }
   }
+}
+
+export const useFieldDecorator = () => {
+  const fieldProperties = {}
+  const Field = (defaultValue?: any) => {
+    return (target: any, propertyKey: string | symbol) => {
+      // MEMO: undefined はnullとして扱う
+      const myDefaultValue = defaultValue || null
+      fieldProperties[propertyKey] = myDefaultValue
+    }
+  }
+  return { Field, fieldProperties }
 }

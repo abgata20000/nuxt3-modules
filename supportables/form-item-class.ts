@@ -1,5 +1,6 @@
 import { computed, Ref, ref } from 'vue'
-import { BaseRepository, IPostParams } from '../repositories'
+import { BaseRepository } from '../repositories'
+import { IPostParams } from '../interfaces'
 import { ErrorMessageModel } from '../models'
 import { toaster, loader } from '../libs'
 interface IArgs {

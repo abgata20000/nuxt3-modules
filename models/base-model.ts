@@ -1,14 +1,29 @@
 export class BaseModel {
   protected dataKey = 'data'
-  protected defaultValues: any
+  protected fieldProperties: any
 
   constructor () {
     this[this.dataKey] = {}
   }
 
-  assignDefaultAttributes (data: any = {}) {
-    const defaultValues = this.defaultValues || {}
+  assignDefaultAttributes (data: any, fieldProperties: any = {}) {
+    this.fieldProperties = fieldProperties
+    const defaultValues = this.fieldProperties || {}
     this.assignAttributes(Object.assign({}, defaultValues, data))
+    this.assignAccessors()
+  }
+
+  assignAccessors () {
+    Object.keys(this.fieldProperties).forEach((key) => {
+      Object.defineProperty(this, key, {
+        get () {
+          return this[this.dataKey][key]
+        },
+        set (val) {
+          this[this.dataKey][key] = val
+        }
+      })
+    })
   }
 
   assignAttributes (data: any) {
