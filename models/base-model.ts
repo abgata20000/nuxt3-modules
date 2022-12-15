@@ -6,7 +6,7 @@ export class BaseModel {
     this[this.dataKey] = {}
   }
 
-  assignDefaultAttributes (data: any, fieldProperties: any) {
+  assignDefaultAttributes (data: any, fieldProperties: any = {}) {
     this.fieldProperties = fieldProperties
     const defaultValues = this.fieldProperties || {}
     this.assignAttributes(Object.assign({}, defaultValues, data))
