@@ -25,10 +25,11 @@ export function FieldDecorator (defaultValue?: any) {
   }
 }
 
+// MEMO: typescriptの仕様が変わってtargetに直接definePropertyで設定できなくなったので別の方法を用意した
 export const useFieldDecorator = () => {
   const fieldProperties = {}
   const Field = (defaultValue?: any) => {
-    return (target: any, propertyKey: string | symbol) => {
+    return (_target: any, propertyKey: string | symbol) => {
       // MEMO: undefined はnullとして扱う
       const myDefaultValue = defaultValue || null
       fieldProperties[propertyKey] = myDefaultValue
