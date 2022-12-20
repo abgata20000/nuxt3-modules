@@ -31,7 +31,7 @@ export const useFieldDecorator = () => {
   const Field = (defaultValue?: any) => {
     return (_target: any, propertyKey: string | symbol) => {
       // MEMO: undefined はnullとして扱う
-      const myDefaultValue = defaultValue || null
+      const myDefaultValue = defaultValue === undefined ? null : defaultValue
       fieldProperties[propertyKey] = myDefaultValue
     }
   }
